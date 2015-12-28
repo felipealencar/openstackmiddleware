@@ -1,8 +1,9 @@
 package distribution.services.jcloud;
 
 import java.io.File;
+import java.io.Serializable;
 
-public class VmBuilder {
+public class VmBuilder implements Serializable {
 
 	private String cluster;
 	private String type;

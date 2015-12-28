@@ -62,7 +62,7 @@ public class NamingProxy extends ClientProxy implements INaming {
 		parameters.add(serviceName);
 
 		// information sent to Requestor
-		inv.setClientProxy(this); 
+		inv.setClientProxy(this);
 		inv.setOperationName(methodName);
 		inv.setParameters(parameters);
 

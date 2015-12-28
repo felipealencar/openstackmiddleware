@@ -5,7 +5,7 @@ import java.util.Set;
 
 import distribution.services.model.RunningVM;;
 
-public interface CloudAdapterIF {
+public interface VMManager {
 	
 	/**
 	 * Returns the number of vms running for a type
@@ -24,7 +24,7 @@ public interface CloudAdapterIF {
 	 * 
 	 * @return true if ok and false if not ok
 	 */
-	boolean add(VmBuilder vmBuilder) throws Exception;
+	boolean add(VmBuilder vmBuilder) throws Exception, Throwable;
 
 	/**
 	 * Removes a vm in a cluster of a type

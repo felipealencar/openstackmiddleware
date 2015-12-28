@@ -3,8 +3,12 @@ package distribution;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+
+import org.springframework.stereotype.Component;
+
 import utilsconf.UtilsConf;
 
+@Component
 public class CalculatorProxy extends ClientProxy implements ICalculator {
 
 	private static final long serialVersionUID = 1L;

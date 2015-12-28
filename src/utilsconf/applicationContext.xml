@@ -15,8 +15,10 @@
 	http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd">
 
 	<context:component-scan base-package="distribution" />
+	
 	<context:annotation-config/>
-	<context:property-placeholder location="file://${application.path}conf/cloudmiddleware.properties" />
+	
+	<context:property-placeholder location="classpath:distribution/services/files/cloudmiddleware.properties" />
 	
 </beans>
 

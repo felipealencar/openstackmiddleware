@@ -246,6 +246,8 @@ public class JCloudsClient implements Closeable {
 	 * @throws RunNodesException 
 	 * @throws IOException 
 	 */
+	// Felipe: Aqui você pode ignorar a conexão com o servidor do openstack (como te falei, essa parte já está funcional)
+	// Cuida só da parte de implementação da fila de mensagens
 	public NodeMetadata createVm(final String group, final String type, final String hardwareName, final String imageName,
 			final String network) 
 			throws RunNodesException {

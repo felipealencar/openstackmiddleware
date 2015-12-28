@@ -1,0 +1,30 @@
+{
+    "cluster": "main",
+    "interval_in_minutes": 1,
+    "types": [
+    	{
+		    "type": "admin",
+		    "hardware_name": "m1.micro",
+		    "image_name": "cirros-0.3.1-x86_64-uec",
+		    "min_vms": 2,
+		    "max_vms": 4,
+		    "consecutive_periods_to_check": 1
+	    },
+	    {
+		    "type": "customer",
+		    "hardware_name": "m1.micro",
+		    "image_name": "cirros-0.3.1-x86_64-uec",
+		    "min_vms": 2,
+		    "max_vms": 4,
+		    "consecutive_periods_to_check": 1
+	    },
+	    {
+		    "type": "public",
+		    "hardware_name": "m1.micro",
+		    "image_name": "cirros-0.3.1-x86_64-uec",
+		    "min_vms": 2,
+		    "max_vms": 4,
+		    "consecutive_periods_to_check": 1
+	    }
+	]
+}

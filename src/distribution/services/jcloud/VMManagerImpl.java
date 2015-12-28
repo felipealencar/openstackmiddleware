@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 import distribution.services.model.RunningVM;;
 
 @Component
-public class JCloudsAdpter implements CloudAdapterIF {
+public class VMManagerImpl implements VMManager {
 
 	@Autowired
 	private JCloudsClient jCloudsClient;
@@ -42,11 +42,6 @@ public class JCloudsAdpter implements CloudAdapterIF {
 		if (node != null){
 			logger.debug("node=" + node.getId() + " type=" + vmBuilder.getType() + " cluster" + vmBuilder.getCluster() + " added");
 		
-			if(vmBuilder.getScriptToRun() != null){
-				boolean result = jCloudsClient.executeScript(node.getId(), vmBuilder.getScriptToRun());
-				
-				logger.info(String.format("Result of run a script on node: [%s] is [%b]", node.getId(), result));
-			}
 			
 			return true;
 		}
