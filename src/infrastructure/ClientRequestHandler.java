@@ -4,12 +4,16 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class ClientRequestHandler {
 	private String host;
 	private int port;
-	private int sentMessageSize;
+	private int sentMessageQueueSize;
 	private int receiveMessageSize;
+
+	private static Queue<byte[]> queue = new LinkedList<byte[]>();
 
 	private Socket clientSocket = null;
 	private DataOutputStream outToServer = null;
@@ -26,9 +30,9 @@ public class ClientRequestHandler {
 		outToServer = new DataOutputStream(clientSocket.getOutputStream());
 		inFromServer = new DataInputStream(clientSocket.getInputStream());
 
-		sentMessageSize = msg.length;
-		outToServer.writeInt(sentMessageSize);
-		outToServer.write(msg,0,sentMessageSize);
+		sentMessageQueueSize = msg.length;
+		outToServer.writeInt(sentMessageQueueSize);
+		outToServer.write(msg,0,sentMessageQueueSize);
 		outToServer.flush();
 
 		return;
@@ -51,11 +55,11 @@ public class ClientRequestHandler {
 	}
 
 	public int getSentMessageSize() {
-		return sentMessageSize;
+		return sentMessageQueueSize;
 	}
 
 	public void setSentMessageSize(int sentMessageSize) {
-		this.sentMessageSize = sentMessageSize;
+		this.sentMessageQueueSize = sentMessageSize;
 	}
 
 	public int getReceiveMessageSize() {
@@ -64,6 +68,25 @@ public class ClientRequestHandler {
 
 	public void setReceiveMessageSize(int receiveMessageSize) {
 		this.receiveMessageSize = receiveMessageSize;
+	}
+
+	public void enqueue(byte[] msgMarshalled) {
+		queue.add(msgMarshalled);
+	}
+
+	public void sendMessageQueue() throws IOException {
+		clientSocket = new Socket(this.host, this.port);
+		outToServer = new DataOutputStream(clientSocket.getOutputStream());
+		inFromServer = new DataInputStream(clientSocket.getInputStream());
+
+		byte[] msg = queue.poll();
+		sentMessageQueueSize = msg.length;
+		outToServer.writeInt(sentMessageQueueSize);
+		outToServer.write(msg,0,sentMessageQueueSize);
+		outToServer.flush();
+
+		return;
+
 	}
 
 }

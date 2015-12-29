@@ -9,7 +9,7 @@ public class Requestor {
 
 	public Termination invoke(Invocation inv) throws UnknownHostException,
 			IOException, Throwable {
-		ClientRequestHandler crh = new ClientRequestHandler(inv
+		ClientRequestHandler clientRequestHandler = new ClientRequestHandler(inv
 				.getClientProxy().getHost(), inv.getClientProxy().getPort());
 		Marshaller marshaller = new Marshaller();
 		Termination termination = new Termination();
@@ -29,11 +29,14 @@ public class Requestor {
 		// marshall request message
 		msgMarshalled = marshaller.marshall(msgToBeMarshalled);
 
+		// enqueue marshalled message
+		clientRequestHandler.enqueue(msgMarshalled);
+		
 		// send marshalled message
-		crh.send(msgMarshalled);
-
+		clientRequestHandler.sendMessageQueue();
+		
 		// receive reply message
-		msgToBeUnmarshalled = crh.receive();
+		msgToBeUnmarshalled = clientRequestHandler.receive();
 
 		// unmarshall reply message
 		msgUnmarshalled = (Message) marshaller.unmarshall(msgToBeUnmarshalled);
