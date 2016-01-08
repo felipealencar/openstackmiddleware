@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import utilsconf.UtilsConf;
+
 public class ServerRequestHandler {
 	private int portNumber;
 	private ServerSocket welcomeSocket = null;

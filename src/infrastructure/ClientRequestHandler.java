@@ -42,7 +42,7 @@ public class ClientRequestHandler {
 		receiveMessageSize = inFromServer.readInt();
 		msg = new byte[receiveMessageSize];
 		inFromServer.read(msg, 0, receiveMessageSize);
-				
+		
 		clientSocket.close();
 		outToServer.close();
 		inFromServer.close();

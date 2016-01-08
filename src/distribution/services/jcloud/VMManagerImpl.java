@@ -11,6 +11,7 @@ import org.jclouds.compute.RunNodesException;
 import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import distribution.services.model.RunningVM;;
@@ -49,29 +50,9 @@ public class VMManagerImpl implements VMManager {
 		return false;
 	}
 
-	public boolean remove(VmBuilder vmBuilder) {
-		List<RunningVM> nodes = getRunningVms(vmBuilder.getCluster(), vmBuilder.getType());
+	public boolean remove(String id) throws Exception, Throwable {
 		
-		RunningVM node = nodes.iterator().next(); 
-		if(node == null)
-			return false;
-		
-		if(vmBuilder.getLoadBalancerUrl() != null && vmBuilder.getLoadBalancerRule() != null && vmBuilder.getLoadBalancerModel() != null){
-			String ip = node.getPrivateIps().iterator().next();
-			
-			String id = node.getId();
-			jCloudsClient.destroyVM(id);
-			
-			/*** Checks if it was removed of not ***/
-			nodes = getRunningVms(vmBuilder.getCluster(), vmBuilder.getType());
-			
-			for (RunningVM vm : nodes){
-				if (vm.getId().equalsIgnoreCase(id))
-					return false;
-			}
-		}
-		
-		return true;
+		return jCloudsClient.destroyVM(id);
 	}
 
 	public Set<String> getRunningTypes(String cluster) {
@@ -81,6 +62,20 @@ public class VMManagerImpl implements VMManager {
 	public List<RunningVM> getRunningVms(String cluster, String type) {
 		List<RunningVM> runningVms = new ArrayList<RunningVM>();
 		List<ComputeMetadata> nodesMetadata = jCloudsClient.getRunningNodes(cluster, type);
+		
+		for (ComputeMetadata computeMetadata : nodesMetadata) {
+			RunningVM vm = parse(computeMetadata);
+			runningVms.add(vm);
+		}
+		
+		return runningVms;
+	}
+	
+	public List<RunningVM> getRunningVms(String cluster) {
+		
+		List<RunningVM> runningVms = new ArrayList<RunningVM>();
+		
+		List<ComputeMetadata> nodesMetadata = jCloudsClient.getRunningNodes(cluster);
 		
 		for (ComputeMetadata computeMetadata : nodesMetadata) {
 			RunningVM vm = parse(computeMetadata);

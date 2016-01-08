@@ -29,11 +29,11 @@ public interface VMManager {
 	/**
 	 * Removes a vm in a cluster of a type
 	 * 
-	 * @param vmBuilder the vm builder
+	 * @param String the vm builder
 	 * 
 	 * @return true if removed and false if not
 	 */
-	boolean remove(VmBuilder vmBuilder);
+	boolean remove(String id) throws Exception, Throwable;
 
 	/**
 	 * Returns the running vm types in a cluster
@@ -53,4 +53,13 @@ public interface VMManager {
 	 * @return the running vms
 	 */
 	List<RunningVM> getRunningVms(String cluster, String type);
+	
+	/**
+	 * Returns the running vms for a type in a cluster
+	 * 
+	 * @param cluster the cluster
+	 * 
+	 * @return the running vms
+	 */
+	List<RunningVM> getRunningVms(String cluster)  throws Exception, Throwable;
 }

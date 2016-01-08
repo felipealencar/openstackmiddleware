@@ -1,10 +1,11 @@
 package distribution.services.model;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-public class RunningVM {
+public class RunningVM implements Serializable {
 
 	private String id;
 	private String type;
