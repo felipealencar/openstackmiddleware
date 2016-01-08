@@ -13,6 +13,8 @@ import utilsconf.UtilsConf;
 
 public class VMManagerProxy extends ClientProxy implements VMManager {
 
+	private VMManagerCallback vmManagerCallback;
+	
 	public VMManagerProxy() throws UnknownHostException {
 		this.host = InetAddress.getLocalHost().getHostName();
 		this.port = UtilsConf.nextPortAvailable();
@@ -77,6 +79,7 @@ public class VMManagerProxy extends ClientProxy implements VMManager {
 		inv.setParameters(parameters);
 
 		// invoke Requestor
+		requestor.registerCallback(vmManagerCallback);
 		ter = requestor.invoke(inv);
 
 		return (List<RunningVM>)ter.getResult();
@@ -119,6 +122,11 @@ public class VMManagerProxy extends ClientProxy implements VMManager {
 	public List<RunningVM> getRunningVms(String cluster, String type) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public void registerCallback(VMManagerCallback vmManagerCallback) {
+		this.vmManagerCallback = vmManagerCallback;
+		
 	}
 
 }

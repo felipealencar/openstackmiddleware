@@ -9,11 +9,11 @@ import distribution.beans.VMsConfigurationBean;
 import distribution.services.jcloud.VmBuilder;
 import distribution.services.model.RunningVM;
 
-public class VMManagerClient {
+public class VMManagerClient implements IVMManagerCallback {
 	
 	public static void main(String[] args) throws Throwable {
 		// TODO Auto-generated method stub
-		
+		VMManagerCallback vmManagerCallback = new VMManagerCallback();
 		// create an instance of Naming Service
 		NamingProxy namingService = new NamingProxy("localhost", 1313);
 		
@@ -31,6 +31,7 @@ public class VMManagerClient {
 		
 		for (VmBuilder vmBuilder : vmBuilders) {
 			try {
+				managerProxy.registerCallback(vmManagerCallback);
 				managerProxy.add(vmBuilder);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -68,6 +69,11 @@ public class VMManagerClient {
 				idToRemove = runningVM.getId();
 			}
 		}
+	}
+	
+	@Override
+	public boolean vmCreated(boolean status) {
+		return status;
 	}
 
 }
