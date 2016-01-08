@@ -83,6 +83,25 @@ public class JCloudsClient implements Closeable {
 	public List<ComputeMetadata> getRunningNodes(String group, String type) {
 		if (computeService == null) 
 			throw new IllegalStateException("Session not authenticated!");
+		
+		Set<? extends ComputeMetadata> nodes = computeService.listNodes();
+		List<ComputeMetadata> filteredNodes = new LinkedList<ComputeMetadata>();
+		
+		logger.debug("Nodes:");
+		for (ComputeMetadata node : nodes) {
+			
+			if (isRunning(node.getId()) && isInGroup(node, group) && isType(node, type)){ 
+				logger.debug("Name = " + node.getName() + " | Id = " + node.getId());
+				filteredNodes.add(node);
+			}
+		}
+		
+		return filteredNodes;
+	}
+	
+	public List<ComputeMetadata> getRunningNodes(String group) {
+		if (computeService == null) 
+			throw new IllegalStateException("Session not authenticated!");
 
 		Set<? extends ComputeMetadata> nodes = computeService.listNodes();
 		List<ComputeMetadata> filteredNodes = new LinkedList<ComputeMetadata>();
@@ -90,7 +109,7 @@ public class JCloudsClient implements Closeable {
 		logger.debug("Nodes:");
 		for (ComputeMetadata node : nodes) {
 		
-			if (isRunning(node.getId()) && isInGroup(node, group) && isType(node, type)){ 
+			if (isRunning(node.getId()) && isInGroup(node, group)){ 
 				logger.debug("Name = " + node.getName() + " | Id = " + node.getId());
 				filteredNodes.add(node);
 			}

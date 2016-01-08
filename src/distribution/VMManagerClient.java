@@ -2,13 +2,12 @@ package distribution;
 
 import java.util.List;
 
-import org.jclouds.compute.RunNodesException;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import commonservices.naming.NamingProxy;
 import distribution.beans.VMsConfigurationBean;
-import distribution.services.jcloud.VMManagerImpl;
 import distribution.services.jcloud.VmBuilder;
+import distribution.services.model.RunningVM;
 
 public class VMManagerClient implements IVMManagerCallback {
 	
@@ -28,6 +27,8 @@ public class VMManagerClient implements IVMManagerCallback {
 		// look for Calculator in Naming service
 		VMManagerProxy managerProxy = (VMManagerProxy) namingService.lookup("VMManager");
 		
+		System.out.println("############ ADD VMS ##################");
+		
 		for (VmBuilder vmBuilder : vmBuilders) {
 			try {
 				managerProxy.registerCallback(vmManagerCallback);
@@ -36,6 +37,36 @@ public class VMManagerClient implements IVMManagerCallback {
 				e.printStackTrace();
 			} catch (Throwable e) {
 				e.printStackTrace();
+			}
+		}
+		
+		
+		System.out.println("############ LIST VMS (BEFORE REMOTION) ##################");
+		
+		String vmTypeToRemove = "main-public";
+		String idToRemove = null;
+		
+		List<RunningVM> vms = managerProxy.getRunningVms("main");
+		
+		for (RunningVM runningVM : vms) {
+			System.out.println(runningVM.getType() + " | " + runningVM);
+			if (runningVM.getType().equalsIgnoreCase(vmTypeToRemove)) {
+				idToRemove = runningVM.getId();
+			}
+		}
+		
+		managerProxy.remove(idToRemove);
+		
+		Thread.sleep(5000);
+		
+		System.out.println("############ LIST VMS (AFTER REMOTION) ##################");
+		
+		vms = managerProxy.getRunningVms("main");
+		
+		for (RunningVM runningVM : vms) {
+			System.out.println(runningVM.getType() + " | " + runningVM);
+			if (runningVM.getType().equalsIgnoreCase(vmTypeToRemove)) {
+				idToRemove = runningVM.getId();
 			}
 		}
 	}

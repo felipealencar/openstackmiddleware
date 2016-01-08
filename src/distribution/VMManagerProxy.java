@@ -41,10 +41,37 @@ public class VMManagerProxy extends ClientProxy implements VMManager {
 		;
 		String methodName;
 		Requestor requestor = new Requestor();
-
+		
 		// information received from Client
 		methodName = Local.class.getEnclosingMethod().getName();
 		parameters.add(vmBuilder);
+		
+		// information sent to Requestor
+		inv.setClientProxy(this);
+		inv.setOperationName(methodName);
+		inv.setParameters(parameters);
+		
+		// invoke Requestor
+		ter = requestor.invoke(inv);
+		
+		// @ Result sent back to Client
+		return (Boolean) ter.getResult();
+	}
+	
+	@Override
+	public List<RunningVM> getRunningVms(String cluster) throws Exception, Throwable {
+		Invocation inv = new Invocation();
+		Termination ter = new Termination();
+		ArrayList<Object> parameters = new ArrayList<Object>();
+		class Local {
+		}
+		;
+		String methodName;
+		Requestor requestor = new Requestor();
+
+		// information received from Client
+		methodName = Local.class.getEnclosingMethod().getName();
+		parameters.add(cluster);
 
 		// information sent to Requestor
 		inv.setClientProxy(this);
@@ -55,15 +82,34 @@ public class VMManagerProxy extends ClientProxy implements VMManager {
 		requestor.registerCallback(vmManagerCallback);
 		ter = requestor.invoke(inv);
 
-		// @ Result sent back to Client
-//		return (Float) ter.getResult();
-		return true;
+		return (List<RunningVM>)ter.getResult();
 	}
 
 	@Override
-	public boolean remove(VmBuilder vmBuilder) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean remove(String cluster) throws Exception, Throwable {
+		
+		Invocation inv = new Invocation();
+		Termination ter = new Termination();
+		ArrayList<Object> parameters = new ArrayList<Object>();
+		class Local {
+		}
+		;
+		String methodName;
+		Requestor requestor = new Requestor();
+
+		// information received from Client
+		methodName = Local.class.getEnclosingMethod().getName();
+		parameters.add(cluster);
+
+		// information sent to Requestor
+		inv.setClientProxy(this);
+		inv.setOperationName(methodName);
+		inv.setParameters(parameters);
+
+		// invoke Requestor
+		ter = requestor.invoke(inv);
+
+		return (Boolean) ter.getResult();
 	}
 
 	@Override
