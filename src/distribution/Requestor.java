@@ -4,13 +4,18 @@ import infrastructure.ClientRequestHandler;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Requestor {
 
+	List<VMManagerCallback> callbacks = new ArrayList<VMManagerCallback>();
+	
 	public Termination invoke(Invocation inv) throws UnknownHostException,
 			IOException, Throwable {
 		ClientRequestHandler clientRequestHandler = new ClientRequestHandler(inv
 				.getClientProxy().getHost(), inv.getClientProxy().getPort());
+		
 		Marshaller marshaller = new Marshaller();
 		Termination termination = new Termination();
 		byte [] msgMarshalled = new byte [1000];
@@ -29,22 +34,25 @@ public class Requestor {
 		// marshall request message
 		msgMarshalled = marshaller.marshall(msgToBeMarshalled);
 
-		// enqueue marshalled message
-		clientRequestHandler.enqueue(msgMarshalled);
-		
 		// send marshalled message
-		clientRequestHandler.sendMessageQueue();
+		clientRequestHandler.send(msgMarshalled);
 		
 		// receive reply message
 		msgToBeUnmarshalled = clientRequestHandler.receive();
 
-		// unmarshall reply message
+		// unmarshall reply message and callback client
 		msgUnmarshalled = (Message) marshaller.unmarshall(msgToBeUnmarshalled);
-
+		for (VMManagerCallback vmManagerCallback : callbacks) {
+            vmManagerCallback.vmCreated(true);
+        }
 		// return result to Client Proxy
 		termination.setResult(msgUnmarshalled.getBody().getReplyBody()
 				.getOperationResult());
 
 		return termination;
+	}
+	
+	public void registerCallback(VMManagerCallback callback){
+		callbacks.add(callback);
 	}
 }

@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import distribution.*;
 
-public class NamingInvoker {
+public class NamingInvoker { 
 
 	public void invoke(int portNamingServer) throws IOException, Throwable {
 		ServerRequestHandler srh = new ServerRequestHandler(portNamingServer);

@@ -7,6 +7,8 @@ import java.net.Socket;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import distribution.VMManagerCallback;
+
 public class ClientRequestHandler {
 	private String host;
 	private int port;
@@ -46,7 +48,7 @@ public class ClientRequestHandler {
 		receiveMessageSize = inFromServer.readInt();
 		msg = new byte[receiveMessageSize];
 		inFromServer.read(msg, 0, receiveMessageSize);
-				
+		
 		clientSocket.close();
 		outToServer.close();
 		inFromServer.close();
