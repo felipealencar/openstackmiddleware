@@ -44,5 +44,4 @@ public class VMManagerClient implements IVMManagerCallback {
 	public boolean vmCreated(boolean status) {
 		return status;
 	}
-
 }

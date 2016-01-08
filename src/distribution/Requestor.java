@@ -45,6 +45,7 @@ public class Requestor {
 		for (VMManagerCallback vmManagerCallback : callbacks) {
             vmManagerCallback.vmCreated(true);
         }
+		
 		// return result to Client Proxy
 		termination.setResult(msgUnmarshalled.getBody().getReplyBody()
 				.getOperationResult());
