@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import distribution.VMManagerCallback;
 import distribution.services.model.RunningVM;;
 
 @Component
@@ -100,6 +101,11 @@ public class VMManagerImpl implements VMManager {
 		RunningVM vm = new RunningVM(id, type, cluster, hardwareName, imageName, publicIps, privateIps);
 		
 		return vm;
+	}
+
+	@Override
+	public boolean add(VmBuilder vmBuilder, VMManagerCallback vmManagerCallback) throws Exception, Throwable {
+		return this.add(vmBuilder);
 	}
 
 }
