@@ -11,6 +11,8 @@ import distribution.services.model.RunningVM;
 
 public class VMManagerClient {
 	
+	public static VMManagerCallback callback = new VMManagerCallback();
+				
 	public static void main(String[] args) throws Throwable {
 		// TODO Auto-generated method stub
 		// create an instance of Naming Service
@@ -22,7 +24,7 @@ public class VMManagerClient {
 		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("classpath:utilsconf/applicationContext.xml");
 		
 		List<VmBuilder> vmBuilders = context.getBean(VMsConfigurationBean.class).getVmBuilders();
-		
+
 		// look for Calculator in Naming service
 		VMManagerProxy managerProxy = (VMManagerProxy) namingService.lookup("VMManager");
 		
@@ -30,7 +32,7 @@ public class VMManagerClient {
 		
 		for (VmBuilder vmBuilder : vmBuilders) {
 			try {
-				managerProxy.add(vmBuilder);
+				managerProxy.add(vmBuilder, callback);
 			} catch (Exception e) {
 				e.printStackTrace();
 			} catch (Throwable e) {

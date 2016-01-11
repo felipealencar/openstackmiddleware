@@ -32,8 +32,8 @@ public class VMManagerProxy extends ClientProxy implements VMManager, IVMManager
 	}
 
 	@Override
-	public boolean add(VmBuilder vmBuilder) throws Exception, Throwable {
-		
+	public boolean add(VmBuilder vmBuilder, VMManagerCallback callback) throws Exception, Throwable {
+		this.callback = callback;
 		Invocation inv = new Invocation();
 		Termination ter = new Termination();
 		ArrayList<Object> parameters = new ArrayList<Object>();
@@ -53,10 +53,10 @@ public class VMManagerProxy extends ClientProxy implements VMManager, IVMManager
 		inv.setParameters(parameters);
 		
 		// invoke Requestor
-		ter = requestor.invoke(inv, this, null);
+		requestor.invoke(inv, this, null);
 		
-		// @ Result sent back to Client
-		return (Boolean) ter.getResult();
+		// Coloquei true direto só pra não alterar o método, o tratamento do add vai ser feito no callback.
+		return true;
 	}
 	
 	@Override
@@ -132,7 +132,7 @@ public class VMManagerProxy extends ClientProxy implements VMManager, IVMManager
 
 	@Override
 	public float sendVmSettings(Termination termination) {
-		// TODO Auto-generated method stub
+		this.callback.sendVmSettings(termination);
 		return 0;
 	}
 

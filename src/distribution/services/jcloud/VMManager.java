@@ -3,6 +3,7 @@ package distribution.services.jcloud;
 import java.util.List;
 import java.util.Set;
 
+import distribution.VMManagerCallback;
 import distribution.services.model.RunningVM;;
 
 public interface VMManager {
@@ -24,7 +25,7 @@ public interface VMManager {
 	 * 
 	 * @return true if ok and false if not ok
 	 */
-	boolean add(VmBuilder vmBuilder) throws Exception, Throwable;
+	boolean add(VmBuilder vmBuilder, VMManagerCallback vmManagerCallback) throws Exception, Throwable;
 
 	/**
 	 * Removes a vm in a cluster of a type
