@@ -11,7 +11,7 @@ public class VMManagerCallback implements IVMManagerCallback {
 	@Override
 	public float sendVmSettings(Termination termination) {
 		System.out.println("Teste no callback: "+(Float) termination.getResult());
-		return (float) 1.0;
+		return 0;
 	}
 
 	@Override
@@ -21,8 +21,7 @@ public class VMManagerCallback implements IVMManagerCallback {
 	}
 
 	public void setVmBuilders(List<VmBuilder> vmBuilders) {
-		this.vmBuilders = vmBuilders;
-		
+		this.vmBuilders = vmBuilders;	
 	}
 
 }

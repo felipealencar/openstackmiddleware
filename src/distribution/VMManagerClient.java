@@ -32,6 +32,7 @@ public class VMManagerClient {
 		
 		for (VmBuilder vmBuilder : vmBuilders) {
 			try {
+				//TODO: Verificar callback pra saber se VMs foram criadas.
 				managerProxy.add(vmBuilder, callback);
 			} catch (Exception e) {
 				e.printStackTrace();

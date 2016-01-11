@@ -70,7 +70,8 @@ public class Requestor implements IVMManagerCallback, ICalculatorCallback {
 		Termination termination = new Termination();
 		byte [] msgMarshalled = new byte [1000];
 		byte [] msgToBeUnmarshalled = new byte [1000];
-		Message msgUnmarshalled = new Message(); // TODO actual marshalling
+		Message msgUnmarshalled = new Message();
+		// TODO actual marshalling
 		System.out.println("Teste no Requestor (após execução da thread). ");
 		msgToBeUnmarshalled = msg;
 		msgUnmarshalled = (Message) marshaller.unmarshall(msgToBeUnmarshalled);

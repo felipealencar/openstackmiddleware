@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import distribution.ICalculatorCallback;
 import distribution.IVMManagerCallback;
@@ -64,6 +65,7 @@ public class ClientRequestHandler {
 
 	public byte [] receive(IVMManagerCallback vmManagerCallback, ICalculatorCallback calculatorCallback) throws IOException, InterruptedException,
 	ClassNotFoundException {
+		AtomicInteger cont = new AtomicInteger(1);
 		Thread t1 = new Thread(new Runnable() {
 			public void run() {
 				try {
@@ -83,27 +85,34 @@ public class ClientRequestHandler {
 					vmManagerCallback.receiveMessage(msg);
 				else if(calculatorCallback != null)
 					calculatorCallback.receiveMessage(msg);
-				try {
-					clientSocket.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				try {
-					outToServer.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				try {
-					inFromServer.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				
+				cont.incrementAndGet();
 			}
-		});  
-		t1.start();
+		});
+		if(cont.get()==1)
+			t1.start();
+		if(cont.get()>1){
+			t1.join();
+			t1.start();
+		}
+		try {
+			clientSocket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			outToServer.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			inFromServer.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 
 		return msg;

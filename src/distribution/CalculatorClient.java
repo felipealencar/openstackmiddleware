@@ -26,6 +26,9 @@ public class CalculatorClient {
 		//calculatorProxy.add(1, 3);
 		
 		System.out.println("Resultado da operação: "+calculatorProxy.add(1, 3, callback));
+		System.out.println("Resultado da operação: "+calculatorProxy.add(1, 3, callback));
+		System.out.println("Resultado da operação: "+calculatorProxy.add(1, 3, callback));
+		System.out.println("Resultado da operação: "+calculatorProxy.add(1, 3, callback));
 		System.out.println("Teste no cliente (chamada após a thread (ainda em execução)).");
 	}
 
