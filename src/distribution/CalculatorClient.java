@@ -25,10 +25,10 @@ public class CalculatorClient {
 		// invoke calculator
 		//calculatorProxy.add(1, 3);
 		
+		System.out.println("Resultado da operação: "+calculatorProxy.add(1, 2, callback));
 		System.out.println("Resultado da operação: "+calculatorProxy.add(1, 3, callback));
-		System.out.println("Resultado da operação: "+calculatorProxy.add(1, 3, callback));
-		System.out.println("Resultado da operação: "+calculatorProxy.add(1, 3, callback));
-		System.out.println("Resultado da operação: "+calculatorProxy.add(1, 3, callback));
+		System.out.println("Resultado da operação: "+calculatorProxy.add(1, 4, callback));
+		System.out.println("Resultado da operação: "+calculatorProxy.add(1, 5, callback));
 		System.out.println("Teste no cliente (chamada após a thread (ainda em execução)).");
 	}
 

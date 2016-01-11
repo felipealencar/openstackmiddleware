@@ -14,7 +14,7 @@ import distribution.IVMManagerCallback;
 public class ClientRequestHandler {
 	private String host;
 	private int port;
-	private int sentMessageQueueSize;
+	private int sentMessageSize;
 	private int receiveMessageSize;
 
 	private static Queue<byte[]> queue = new LinkedList<byte[]>();
@@ -22,11 +22,11 @@ public class ClientRequestHandler {
 	private boolean responseArrived;
 
 	private byte[] msg = null;
-	
+
 	private Socket clientSocket = null;
 	private DataOutputStream outToServer = null;
 	private DataInputStream inFromServer = null;
-	
+
 
 	public ClientRequestHandler(String host, int port) {
 		this.host = host;
@@ -39,9 +39,13 @@ public class ClientRequestHandler {
 		outToServer = new DataOutputStream(clientSocket.getOutputStream());
 		inFromServer = new DataInputStream(clientSocket.getInputStream());
 
-		sentMessageQueueSize = msg.length;
-		outToServer.writeInt(sentMessageQueueSize);
-		outToServer.write(msg,0,sentMessageQueueSize);
+		sentMessageSize = msg.length;
+
+		//Flush adicionado antes também do envio de dados devido ao multithread.
+		outToServer.flush();
+		outToServer.writeInt(sentMessageSize);
+		outToServer.flush();
+		outToServer.write(msg,0,sentMessageSize);
 		outToServer.flush();
 
 		return;
@@ -69,18 +73,15 @@ public class ClientRequestHandler {
 		Thread t1 = new Thread(new Runnable() {
 			public void run() {
 				try {
+					outToServer.flush();
 					receiveMessageSize = inFromServer.readInt();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				msg = new byte[receiveMessageSize];
-				try {
+					msg = new byte[receiveMessageSize];
 					inFromServer.read(msg, 0, receiveMessageSize);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+
 				if(vmManagerCallback != null)
 					vmManagerCallback.receiveMessage(msg);
 				else if(calculatorCallback != null)
@@ -89,41 +90,34 @@ public class ClientRequestHandler {
 				cont.incrementAndGet();
 			}
 		});
-		if(cont.get()==1)
+		Thread t2 = new Thread(new Runnable() {
+			public void run() {
+				
+			}
+		});
+
+		if(cont.get()==1){
 			t1.start();
+			t2.join();
+			t2.start();
+		}
+
 		if(cont.get()>1){
 			t1.join();
 			t1.start();
+			t2.join();
+			t2.start();
 		}
-		try {
-			clientSocket.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
-			outToServer.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
-			inFromServer.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
 
 		return msg;
 	}
 
 	public int getSentMessageSize() {
-		return sentMessageQueueSize;
+		return sentMessageSize;
 	}
 
 	public void setSentMessageSize(int sentMessageSize) {
-		this.sentMessageQueueSize = sentMessageSize;
+		this.sentMessageSize = sentMessageSize;
 	}
 
 	public int getReceiveMessageSize() {
@@ -144,9 +138,9 @@ public class ClientRequestHandler {
 		inFromServer = new DataInputStream(clientSocket.getInputStream());
 
 		byte[] msg = queue.poll();
-		sentMessageQueueSize = msg.length;
-		outToServer.writeInt(sentMessageQueueSize);
-		outToServer.write(msg,0,sentMessageQueueSize);
+		sentMessageSize = msg.length;
+		outToServer.writeInt(sentMessageSize);
+		outToServer.write(msg,0,sentMessageSize);
 		outToServer.flush();
 
 		return;
