@@ -15,4 +15,7 @@ public interface ICalculator {
 
 	public float div(float x, float y) throws IOException,
 			InterruptedException, Throwable;
+
+	public float add(float x, float y, CalculatorCallback callback) throws IOException,
+			InterruptedException, Throwable;
 }

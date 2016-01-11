@@ -41,7 +41,7 @@ public class NamingProxy extends ClientProxy implements INaming {
 		inv.setOperationName(methodName);
 		inv.setParameters(parameters);
 
-		requestor.invoke(inv);
+		requestor.invoke(inv, null, null);
 
 		// @ Result sent back to Client
 		return;
@@ -67,7 +67,7 @@ public class NamingProxy extends ClientProxy implements INaming {
 		inv.setParameters(parameters);
 
 		// invoke Requestor
-		ter = requestor.invoke(inv);
+		ter = requestor.invoke(inv, null, null);
 		
 		// @ Result sent back to Client
 		return (ClientProxy) ter.getResult();
@@ -93,7 +93,7 @@ public class NamingProxy extends ClientProxy implements INaming {
 		inv.setParameters(parameters);
 
 		// invoke Requestor
-		ter = requestor.invoke(inv);
+		ter = requestor.invoke(inv, null, null);
 
 		// result sent back to Client
 		@SuppressWarnings("unchecked")

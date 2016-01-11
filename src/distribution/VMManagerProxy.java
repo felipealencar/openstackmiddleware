@@ -11,9 +11,9 @@ import distribution.services.jcloud.VmBuilder;
 import distribution.services.model.RunningVM;
 import utilsconf.UtilsConf;
 
-public class VMManagerProxy extends ClientProxy implements VMManager {
+public class VMManagerProxy extends ClientProxy implements VMManager, IVMManagerCallback {
 
-	private VMManagerCallback vmManagerCallback;
+	private VMManagerCallback callback;
 	
 	public VMManagerProxy() throws UnknownHostException {
 		this.host = InetAddress.getLocalHost().getHostName();
@@ -33,6 +33,7 @@ public class VMManagerProxy extends ClientProxy implements VMManager {
 
 	@Override
 	public boolean add(VmBuilder vmBuilder) throws Exception, Throwable {
+		
 		Invocation inv = new Invocation();
 		Termination ter = new Termination();
 		ArrayList<Object> parameters = new ArrayList<Object>();
@@ -52,7 +53,7 @@ public class VMManagerProxy extends ClientProxy implements VMManager {
 		inv.setParameters(parameters);
 		
 		// invoke Requestor
-		ter = requestor.invoke(inv);
+		ter = requestor.invoke(inv, this, null);
 		
 		// @ Result sent back to Client
 		return (Boolean) ter.getResult();
@@ -79,8 +80,7 @@ public class VMManagerProxy extends ClientProxy implements VMManager {
 		inv.setParameters(parameters);
 
 		// invoke Requestor
-		requestor.registerCallback(vmManagerCallback);
-		ter = requestor.invoke(inv);
+		ter = requestor.invoke(inv, this, null);
 
 		return (List<RunningVM>)ter.getResult();
 	}
@@ -107,7 +107,7 @@ public class VMManagerProxy extends ClientProxy implements VMManager {
 		inv.setParameters(parameters);
 
 		// invoke Requestor
-		ter = requestor.invoke(inv);
+		ter = requestor.invoke(inv, this, null);
 
 		return (Boolean) ter.getResult();
 	}
@@ -124,9 +124,16 @@ public class VMManagerProxy extends ClientProxy implements VMManager {
 		return null;
 	}
 
-	public void registerCallback(VMManagerCallback vmManagerCallback) {
-		this.vmManagerCallback = vmManagerCallback;
-		
+	@Override
+	public Termination receiveMessage(byte[] msg) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public float sendVmSettings(Termination termination) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

@@ -1,5 +1,7 @@
 package distribution;
 
+import java.io.IOException;
+
 public class CalculatorImpl implements ICalculator {
 
 	@Override
@@ -21,5 +23,12 @@ public class CalculatorImpl implements ICalculator {
 	public float mul(float a, float b) {
 		return a * b;
 	}
+
+	@Override
+	public float add(float x, float y, CalculatorCallback callback)
+			throws IOException, InterruptedException, Throwable {
+		return x+y;
+	}
+
 
 }

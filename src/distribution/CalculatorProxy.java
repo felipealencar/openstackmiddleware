@@ -1,5 +1,6 @@
 package distribution;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -9,10 +10,11 @@ import org.springframework.stereotype.Component;
 import utilsconf.UtilsConf;
 
 @Component
-public class CalculatorProxy extends ClientProxy implements ICalculator {
+public class CalculatorProxy extends ClientProxy implements ICalculator, ICalculatorCallback {
 
 	private static final long serialVersionUID = 1L;
-
+	private static Termination ter = new Termination();
+	private CalculatorCallback callback;
 	// TODO objID
 	public CalculatorProxy() throws UnknownHostException {
 		this.host = InetAddress.getLocalHost().getHostName();
@@ -25,9 +27,9 @@ public class CalculatorProxy extends ClientProxy implements ICalculator {
 	}
 
 	@Override
-	public float add(float x, float y) throws Throwable {
+	public float add(float x, float y, CalculatorCallback callback) throws Throwable {
 		Invocation inv = new Invocation();
-		Termination ter = new Termination();
+		this.callback = callback;
 		ArrayList<Object> parameters = new ArrayList<Object>();
 		class Local {
 		}
@@ -46,10 +48,10 @@ public class CalculatorProxy extends ClientProxy implements ICalculator {
 		inv.setParameters(parameters);
 
 		// invoke Requestor
-		ter = requestor.invoke(inv);
-
+		requestor.invoke(inv, null, this);
+		
 		// @ Result sent back to Client
-		return (Float) ter.getResult();
+		return 0;
 	}
 
 	public float sub(float x, float y) throws Throwable {
@@ -73,7 +75,7 @@ public class CalculatorProxy extends ClientProxy implements ICalculator {
 		inv.setParameters(parameters);
 
 		// invoke Requestor
-		ter = requestor.invoke(inv);
+		ter = requestor.invoke(inv, null, this);
 
 		// @ Result sent back to Client
 		return (Float) ter.getResult();
@@ -100,7 +102,7 @@ public class CalculatorProxy extends ClientProxy implements ICalculator {
 		inv.setParameters(parameters);
 
 		// invoke Requestor
-		ter = requestor.invoke(inv);
+		ter = requestor.invoke(inv, null, this);
 
 		// @ Result sent back to Client
 		return (Float) ter.getResult();
@@ -127,9 +129,27 @@ public class CalculatorProxy extends ClientProxy implements ICalculator {
 		inv.setParameters(parameters);
 
 		// invoke Requestor
-		ter = requestor.invoke(inv);
+		ter = requestor.invoke(inv, null, this);
 
 		// @ Result sent back to Client
 		return (Float) ter.getResult();
+	}
+
+	@Override
+	public float add(float x, float y) throws IOException, InterruptedException, Throwable {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public Termination receiveMessage(byte[] msg) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public float printResult(Termination termination) {
+		this.callback.printResult(termination);
+		return 0;
 	}
 }

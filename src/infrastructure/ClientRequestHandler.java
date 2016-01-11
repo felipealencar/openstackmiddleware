@@ -7,7 +7,8 @@ import java.net.Socket;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import distribution.VMManagerCallback;
+import distribution.ICalculatorCallback;
+import distribution.IVMManagerCallback;
 
 public class ClientRequestHandler {
 	private String host;
@@ -16,10 +17,15 @@ public class ClientRequestHandler {
 	private int receiveMessageSize;
 
 	private static Queue<byte[]> queue = new LinkedList<byte[]>();
+	private IVMManagerCallback callback;
+	private boolean responseArrived;
 
+	private byte[] msg = null;
+	
 	private Socket clientSocket = null;
 	private DataOutputStream outToServer = null;
 	private DataInputStream inFromServer = null;
+	
 
 	public ClientRequestHandler(String host, int port) {
 		this.host = host;
@@ -41,17 +47,64 @@ public class ClientRequestHandler {
 	}
 
 	public byte [] receive() throws IOException, InterruptedException,
-			ClassNotFoundException {
+	ClassNotFoundException {
 
 		byte[] msg = null;
-		
+
 		receiveMessageSize = inFromServer.readInt();
 		msg = new byte[receiveMessageSize];
 		inFromServer.read(msg, 0, receiveMessageSize);
-		
+
 		clientSocket.close();
 		outToServer.close();
 		inFromServer.close();
+
+		return msg;
+	}
+
+	public byte [] receive(IVMManagerCallback vmManagerCallback, ICalculatorCallback calculatorCallback) throws IOException, InterruptedException,
+	ClassNotFoundException {
+		Thread t1 = new Thread(new Runnable() {
+			public void run() {
+				try {
+					receiveMessageSize = inFromServer.readInt();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				msg = new byte[receiveMessageSize];
+				try {
+					inFromServer.read(msg, 0, receiveMessageSize);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				if(vmManagerCallback != null)
+					vmManagerCallback.receiveMessage(msg);
+				else if(calculatorCallback != null)
+					calculatorCallback.receiveMessage(msg);
+				try {
+					clientSocket.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				try {
+					outToServer.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				try {
+					inFromServer.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});  
+		t1.start();
+
 
 		return msg;
 	}
