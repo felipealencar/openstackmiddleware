@@ -6,6 +6,7 @@ public class Invocation {
 	private String operationName;
 	private ArrayList<Object> parameters = new ArrayList<Object>();
 	private ClientProxy clientProxy;
+	//O callback poderia ser um atributo de Invocation
 
 	public Invocation() {
 	};

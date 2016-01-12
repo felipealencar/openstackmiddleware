@@ -6,6 +6,24 @@ import distribution.services.jcloud.VmBuilder;
 
 public class VMManagerCallback implements IVMManagerCallback {
 
+	private int id;
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public boolean isFineshed() {
+		return fineshed;
+	}
+
+	public void setFineshed(boolean fineshed) {
+		this.fineshed = fineshed;
+	}
+
+	private boolean fineshed;
 	private List<VmBuilder> vmBuilders;
 
 	@Override

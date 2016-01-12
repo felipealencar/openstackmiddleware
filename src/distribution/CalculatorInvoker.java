@@ -29,6 +29,7 @@ public class CalculatorInvoker {
 
 			switch (msgUnmarshalled.getBody().getRequestHeader().getOperation()) {
 			case "add":
+//				Thread.sleep(2000);
 				// @ Invokes the remote object
 				Float _add_p1 = (Float) msgUnmarshalled.getBody()
 						.getRequestBody().getParameters().get(0);

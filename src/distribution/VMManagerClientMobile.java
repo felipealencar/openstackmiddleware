@@ -9,8 +9,7 @@ import distribution.beans.VMsConfigurationBean;
 import distribution.services.jcloud.VmBuilder;
 import distribution.services.model.RunningVM;
 
-public class VMManagerClient {
-	
+public class VMManagerClientMobile {
 	
 	public static VMManagerCallback callback = new VMManagerCallback();
 				
@@ -21,7 +20,7 @@ public class VMManagerClient {
 		
 		// check registered services
 		System.out.println(namingService.list());
-		
+				
 		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("classpath:utilsconf/applicationContext.xml");
 		
 		List<VmBuilder> vmBuilders = context.getBean(VMsConfigurationBean.class).getVmBuilders();

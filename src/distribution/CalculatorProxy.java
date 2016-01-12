@@ -29,6 +29,7 @@ public class CalculatorProxy extends ClientProxy implements ICalculator, ICalcul
 	@Override
 	public float add(float x, float y, CalculatorCallback callback) throws Throwable {
 		Invocation inv = new Invocation();
+		callback.fineshed = false;
 		this.callback = callback;
 		ArrayList<Object> parameters = new ArrayList<Object>();
 		class Local {

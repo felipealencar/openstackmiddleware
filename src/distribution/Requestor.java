@@ -37,6 +37,7 @@ public class Requestor implements IVMManagerCallback, ICalculatorCallback {
 		msgMarshalled = marshaller.marshall(msgToBeMarshalled);
 
 		// send marshalled message
+		
 		clientRequestHandler.send(msgMarshalled);
 		
 		this.vmManagerCallback = vmManagerCallback;

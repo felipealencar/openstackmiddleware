@@ -19,9 +19,10 @@ public class ClientRequestHandler {
 
 	private static Queue<byte[]> queue = new LinkedList<byte[]>();
 	private IVMManagerCallback callback;
+	AtomicInteger cont = new AtomicInteger(1);
 	private boolean responseArrived;
 
-	private byte[] msg = null;
+	private static byte[] msg = null;
 
 	private Socket clientSocket = null;
 	private DataOutputStream outToServer = null;
@@ -40,7 +41,7 @@ public class ClientRequestHandler {
 		inFromServer = new DataInputStream(clientSocket.getInputStream());
 
 		sentMessageSize = msg.length;
-
+		
 		//Flush adicionado antes também do envio de dados devido ao multithread.
 		outToServer.flush();
 		outToServer.writeInt(sentMessageSize);
@@ -55,6 +56,7 @@ public class ClientRequestHandler {
 	ClassNotFoundException {
 
 		byte[] msg = null;
+		outToServer.flush();
 
 		receiveMessageSize = inFromServer.readInt();
 		msg = new byte[receiveMessageSize];
@@ -69,11 +71,10 @@ public class ClientRequestHandler {
 
 	public byte [] receive(IVMManagerCallback vmManagerCallback, ICalculatorCallback calculatorCallback) throws IOException, InterruptedException,
 	ClassNotFoundException {
-		AtomicInteger cont = new AtomicInteger(1);
 		Thread t1 = new Thread(new Runnable() {
 			public void run() {
 				try {
-					outToServer.flush();
+//					outToServer.flush();
 					receiveMessageSize = inFromServer.readInt();
 					msg = new byte[receiveMessageSize];
 					inFromServer.read(msg, 0, receiveMessageSize);
@@ -86,7 +87,7 @@ public class ClientRequestHandler {
 					vmManagerCallback.receiveMessage(msg);
 				else if(calculatorCallback != null)
 					calculatorCallback.receiveMessage(msg);
-				
+
 				cont.incrementAndGet();
 			}
 		});

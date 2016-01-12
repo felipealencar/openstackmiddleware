@@ -2,6 +2,8 @@ package distribution;
 
 import java.util.List;
 
+import javax.swing.JDesktopPane;
+
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import commonservices.naming.NamingProxy;
@@ -9,19 +11,23 @@ import distribution.beans.VMsConfigurationBean;
 import distribution.services.jcloud.VmBuilder;
 import distribution.services.model.RunningVM;
 
-public class VMManagerClient {
+public class VMManagerClientDesktop extends JDesktopPane {
 	
-	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public static VMManagerCallback callback = new VMManagerCallback();
 				
 	public static void main(String[] args) throws Throwable {
 		// TODO Auto-generated method stub
+		
 		// create an instance of Naming Service
 		NamingProxy namingService = new NamingProxy("localhost", 1313);
 		
 		// check registered services
 		System.out.println(namingService.list());
-		
+				
 		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("classpath:utilsconf/applicationContext.xml");
 		
 		List<VmBuilder> vmBuilders = context.getBean(VMsConfigurationBean.class).getVmBuilders();

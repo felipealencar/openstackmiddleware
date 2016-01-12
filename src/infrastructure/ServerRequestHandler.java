@@ -43,6 +43,7 @@ public class ServerRequestHandler {
 	public void send(byte [] msg) throws IOException, InterruptedException {
 		
 		sentMessageSize = msg.length;
+		System.out.println("teste server");
 		outToClient.writeInt(sentMessageSize);
 		outToClient.write(msg);
 		outToClient.flush();

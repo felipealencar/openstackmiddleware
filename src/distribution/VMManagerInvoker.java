@@ -37,6 +37,7 @@ public class VMManagerInvoker {
 			
 			case "add":
 				// @ Invokes the remote object
+				
 				VmBuilder _add_p1 = (VmBuilder) msgUnmarshalled.getBody()
 				.getRequestBody().getParameters().get(0);
 				ter.setResult(rObj.add(_add_p1));

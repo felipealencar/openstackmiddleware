@@ -33,6 +33,7 @@ public class VMManagerProxy extends ClientProxy implements VMManager, IVMManager
 
 	@Override
 	public boolean add(VmBuilder vmBuilder, VMManagerCallback callback) throws Exception, Throwable {
+		this.callback.setFineshed(false);
 		this.callback = callback;
 		Invocation inv = new Invocation();
 		Termination ter = new Termination();
@@ -51,7 +52,7 @@ public class VMManagerProxy extends ClientProxy implements VMManager, IVMManager
 		inv.setClientProxy(this);
 		inv.setOperationName(methodName);
 		inv.setParameters(parameters);
-		
+		this.callback.setId(requestor.hashCode());
 		// invoke Requestor
 		requestor.invoke(inv, this, null);
 		
