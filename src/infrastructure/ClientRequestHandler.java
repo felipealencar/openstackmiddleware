@@ -43,6 +43,7 @@ public class ClientRequestHandler {
 		sentMessageSize = msg.length;
 		
 		//Flush adicionado antes também do envio de dados devido ao multithread.
+		
 		outToServer.flush();
 		outToServer.writeInt(sentMessageSize);
 		outToServer.flush();
